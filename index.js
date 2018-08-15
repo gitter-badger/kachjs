@@ -1,6 +1,7 @@
 #!/usr/bin/node
 const fs = require('fs');
 const ncp = require('ncp').ncp;
+const prependFile = require('prepend-file');
 const spawn = require('child_process').spawn;
 
 const dev_js = `console.warn('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
@@ -123,7 +124,7 @@ function package_json(name) {
       "sse": "0.0.8"
     },
     "scripts": {
-      "build": "prettier --write \\"src/**/*.ts\\" && tsc &&  cp src/components/**/*.html prod/components/ && sass src/components/app-root/*.sass prod/styles.css --no-source-map",
+      "build": "prettier --write \\"src/**/*.ts\\" && tsc &&  cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
       "start": "node server.js"
     },
     "devDependencies": {}
@@ -196,9 +197,8 @@ function newComponent(name) {
   fs.writeFileSync(
     `src/components/${name}/${name}.sass`,
     `${name}
-\tp
-\t\tcolor: red`,
-  );
+\t`);
+    prependFile('src/components/app-root/app-root.sass', `@import 'src/components/${name}/${name}.sass'\n`);
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
     `/// <reference path="../../kachjs/component.ts"/>
