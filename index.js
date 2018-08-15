@@ -4,6 +4,15 @@ const ncp = require('ncp').ncp;
 const prependFile = require('prepend-file');
 const spawn = require('child_process').spawn;
 
+function system(pr, args) {
+  return new Promise(resolve => {
+    let res = spawn(pr, args);
+    res.stderr.pipe(process.stderr);
+    res.stdout.pipe(process.stdout);
+    res.on('close', () => resolve());
+  });
+}
+
 const dev_js = `console.warn('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
 var es = new EventSource("/sse");
 es.onmessage = () => {
@@ -147,7 +156,7 @@ const tsconfig_json = `{
     ]
 }`;
 
-function newProject(name) {
+async function newProject(name) {
   fs.mkdirSync(name);
   fs.writeFileSync(name + '/.gitignore', gitignore);
   fs.writeFileSync(name + '/.prettierrc', prettierrc);
@@ -165,21 +174,10 @@ function newProject(name) {
 
   process.chdir(name);
   newComponent('app-root');
-  let install = spawn('npm', ['install']).on('close', () => {
-    let git = spawn('git', ['init']).on('close', () => {
-      git = spawn('git', ['add', '--all']).on('close', () => {
-        git = spawn('git', ['commit', '-m', 'Initial commit']);
-        git.stdout.pipe(process.stdout);
-        git.stderr.pipe(process.stderr);
-      });
-      git.stdout.pipe(process.stdout);
-      git.stderr.pipe(process.stderr);
-    });
-    git.stdout.pipe(process.stdout);
-    git.stderr.pipe(process.stderr);
-  });
-  install.stdout.pipe(process.stdout);
-  install.stderr.pipe(process.stderr);
+  await system('npm', ['install']);
+  await system('git', ['init']);
+  await system('git', ['add', '--all']);
+  await system('git', ['commit', '-m', 'Initial commit']);
 }
 
 function parseName(name) {
@@ -227,19 +225,14 @@ Possible commands:
 \t[b]uild (--prod) - build project`);
 }
 
-function main() {
+async function main() {
   if (process.argv.length === 2) return usage();
   switch (process.argv[2]) {
     case 's':
     case 'serve':
       fs.stat('src/kachjs', err => {
         if (err) console.error('src/kachjs folder not found. Aborting.');
-        else {
-          let server = spawn('npm', ['start']);
-          server.stderr.pipe(process.stderr);
-          server.stdout.pipe(process.stdout);
-          server.on('close', code => process.exit(code));
-        }
+        else system('npm', ['start']).then(process.exit(0));
       });
       break;
     case 'n':
@@ -257,9 +250,7 @@ function main() {
       break;
     case 'b':
     case 'build':
-      let builder = spawn('npm', ['run', 'build']);
-      builder.stdout.pipe(process.stdout);
-      builder.stderr.pipe(process.stderr);
+      await system('npm', ['run', 'build']);
       if (process.argv.indexOf('--prod') == -1) fs.writeFileSync('prod/dev.js', dev_js);
       break;
     default:
