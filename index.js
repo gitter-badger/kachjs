@@ -164,12 +164,21 @@ function newProject(name) {
 
   process.chdir(name);
   newComponent('app-root');
-  let install = spawn('npm', ['install']);
+  let install = spawn('npm', ['install']).on('close', () => {
+    let git = spawn('git', ['init']).on('close', () => {
+      git = spawn('git', ['add', '--all']).on('close', () => {
+        git = spawn('git', ['commit', '-m', 'Initial commit']);
+        git.stdout.pipe(process.stdout);
+        git.stderr.pipe(process.stderr);
+      });
+      git.stdout.pipe(process.stdout);
+      git.stderr.pipe(process.stderr);
+    });
+    git.stdout.pipe(process.stdout);
+    git.stderr.pipe(process.stderr);
+  });
   install.stdout.pipe(process.stdout);
   install.stderr.pipe(process.stderr);
-  let git = spawn('git', ['init']);
-  git.stdout.pipe(process.stdout);
-  git.stderr.pipe(process.stderr);
 }
 
 function parseName(name) {
@@ -198,7 +207,8 @@ function newComponent(name) {
     constructor() {
       super('${name}');
     }
-  }`,
+  }
+`,
   );
 }
 
