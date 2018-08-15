@@ -74,3 +74,9 @@ To access iterated value, use variable name in "${}" in html, e.g. ${candy}.
 <p (if)="{{2 + 2 === 4}}">As always, 2 + 2 is 4</p>
 <p (init)="truth = true" (if)="truth">Everything is truth</p>
 ```
+#### (ifn) - Hide element conditionnally
+```html
+<p (ifn)="{{2 + 2 === 5}}">2 + 2 is not 5</p>
+<p (ifn)="{{2 + 2 === 4}}">2 + 2 is 4, it's true</p>
+<p (init)="truth = false" (ifn)="truth">Everything is false</p>
+```

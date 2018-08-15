@@ -13,6 +13,9 @@ class KachDirectives {
       this.applyAttribute('(if)', (action: string) => {
         new KachIfDirective(this.el, action);
       });
+      this.applyAttribute('(ifn)', (action: string) => {
+        new KachIfNotDirective(this.el, action);
+      });
       this.applyAttribute('(for)', (loop: string) => {
         new KachForDirective(this.el, loop);
       });
