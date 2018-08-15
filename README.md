@@ -67,3 +67,10 @@ Example:
 ```
 "favourites" variable is initalized with ['snickers', 'milky way'] array, for directive iterates over array's values.
 Use "in" instead of "of" to iterate over object's keys, not values.
+To access iterated value, use variable name in "${}" in html, e.g. ${candy}.
+#### (if) - Show element conditionnally
+```html
+<p (if)="{{2 + 2 === 5}}">Wow, 2 + 2 is 5</p>
+<p (if)="{{2 + 2 === 4}}">As always, 2 + 2 is 4</p>
+<p (init)="truth = true" (if)="truth">Everything is truth</p>
+```

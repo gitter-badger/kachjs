@@ -1,11 +1,17 @@
-/*
-    Attribute: (if)
-    Hides element if value is undefined, false, null, '', 0
-*/
 class KachIfDirective {
   constructor(el: HTMLElement, arg: string) {
+    let ev;
+    try {
+      ev = eval(arg);
+    } catch {}
+    try {
+      eval('(function(' + ev + '){})');
+    } catch {
+      el.hidden = !ev;
+      return;
+    }
     bind(arg);
-    el.hidden = !(<boolean>$data[arg]);
-    $subscribes[arg].push(() => (el.hidden = !(<boolean>$data[arg])));
+    el.hidden = !$data[arg];
+    $subscribes[arg].push(() => (el.hidden = !$data[arg]));
   }
 }

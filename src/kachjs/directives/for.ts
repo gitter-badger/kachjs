@@ -1,9 +1,3 @@
-/*
-    Attribute: (for)
-    Performs two-way binding, and reactively represents array
-    Syntax:
-        <p (for)="candy in favourites">${candy}</p>
-*/
 class KachForDirective {
   loopData: string[];
   loopDirective: string;

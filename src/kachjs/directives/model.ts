@@ -1,7 +1,3 @@
-/*
-    Attribute: (model)
-    Only recieves user input, e.g. performs one-way binding
-*/
 class KachModelDirective {
   constructor(private el: HTMLElement, objname: string) {
     bind(objname);

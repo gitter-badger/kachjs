@@ -1,7 +1,3 @@
-/*
-    Attribute: (bind)
-    Performs two-way binding, e.g. links user input and variable
-*/
 function bind(objname: string) {
   let prop = Object.getOwnPropertyDescriptor($data, objname);
   if (!prop || !prop.set) {
