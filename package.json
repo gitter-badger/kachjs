@@ -1,0 +1,28 @@
+{
+  "preferGlobal": true,
+  "name": "@kachjs/cli",
+  "version": "0.1.0",
+  "main": "kach.js",
+  "bin": {
+    "kach": "./index.js"
+  },
+  "author": {
+    "email": "zaccess33rus@gmail.com",
+    "name": "Zolboobayar Gantumur",
+    "url": "https://github.com/zolbooo"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zolbooo/kachjs-cli/issues"
+  },
+  "homepage": "https://github.com/zolbooo/kachjs-cli/issues",
+  "dependencies": {
+    "hound": "^1.0.5",
+    "sse": "0.0.8"
+  },
+  "scripts": {
+    "build": "prettier --write \"src/**/*.ts\" && tsc &&  cp src/components/**/*.html prod/components/ && sass src/components/app-root/*.sass prod/styles.css --no-source-map && uglifyjs prod/app.js -o prod/app.js",
+    "start": "node server.js"
+  },
+  "devDependencies": {}
+}
