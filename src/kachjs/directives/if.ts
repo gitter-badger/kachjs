@@ -1,13 +1,9 @@
 class KachIfDirective {
   constructor(el: HTMLElement, arg: string) {
-    let ev;
     try {
-      ev = eval(arg);
-    } catch {}
-    try {
-      eval('(function(' + ev + '){})');
+      eval('(function(' + arg + '){})');
     } catch {
-      el.hidden = !ev;
+      el.hidden = eval(arg);
       return;
     }
     bind(arg);
