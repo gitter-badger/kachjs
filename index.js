@@ -257,7 +257,7 @@ function main() {
       let builder = spawn('npm', ['run', 'build']);
       builder.stdout.pipe(process.stdout);
       builder.stderr.pipe(process.stderr);
-      if (process.argv.indexOf('--prod') == -1) fs.writeFileSync(name + '/prod/dev.js', dev_js);
+      if (process.argv.indexOf('--prod') == -1) fs.writeFileSync('prod/dev.js', dev_js);
       break;
     default:
       usage();
