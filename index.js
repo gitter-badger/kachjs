@@ -201,7 +201,7 @@ function newComponent(name) {
 \t`,
   );
   if (name != 'app-root')
-    prependFile('src/components/app-root/app-root.sass', `@import 'src/components/${name}/${name}.sass'\n`);
+    prependFile('src/components/app-root/app-root.sass', `@import '..//${name}/${name}.sass'\n`);
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
     `/// <reference path="../../kachjs/component.ts"/>
