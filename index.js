@@ -124,7 +124,7 @@ function package_json(name) {
       "sse": "0.0.8"
     },
     "scripts": {
-      "build": "prettier --write \\"src/**/*.ts\\" && tsc &&  cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
+      "build": "prettier --write \\"src/**/*.ts\\" && tsc && cp src/index.html prod/ && cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
       "start": "node server.js"
     },
     "devDependencies": {}
@@ -156,12 +156,11 @@ function newProject(name) {
   fs.writeFileSync(name + '/server.js', server_js);
 
   fs.mkdirSync(name + '/src');
+  fs.writeFileSync(name + '/src/index.html', index_html(name, true));
   ncp(__dirname + '/src/kachjs', name + '/src/kachjs');
   fs.mkdirSync(name + '/src/components');
 
   fs.mkdirSync(name + '/prod');
-  fs.writeFileSync(name + '/prod/index.html', index_html(name, true));
-  fs.writeFileSync(name + '/prod/dev.js', dev_js);
   fs.mkdirSync(name + '/prod/components');
 
   process.chdir(name);
@@ -201,7 +200,7 @@ function newComponent(name) {
 \t`,
   );
   if (name != 'app-root')
-    prependFile('src/components/app-root/app-root.sass', `@import '..//${name}/${name}.sass'\n`);
+    prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
     `/// <reference path="../../kachjs/component.ts"/>
@@ -258,7 +257,7 @@ function main() {
       let builder = spawn('npm', ['run', 'build']);
       builder.stdout.pipe(process.stdout);
       builder.stderr.pipe(process.stderr);
-      fs.writeFileSync('prod/index.html', index_html(require('./package.json').name, true));
+      if (process.argv.indexOf('--prod') == -1) fs.writeFileSync(name + '/prod/dev.js', dev_js);
       break;
     default:
       usage();
