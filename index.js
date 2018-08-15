@@ -128,7 +128,8 @@ function package_json(name) {
       "start": "node server.js"
     },
     "devDependencies": {}
-}`};
+}`;
+}
 const tsconfig_json = `{
     "compilerOptions": {
       "target": "es2015",
@@ -197,7 +198,9 @@ function newComponent(name) {
   fs.writeFileSync(
     `src/components/${name}/${name}.sass`,
     `${name}
-\t`);
+\t`,
+  );
+  if (name != 'app-root')
     prependFile('src/components/app-root/app-root.sass', `@import 'src/components/${name}/${name}.sass'\n`);
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
