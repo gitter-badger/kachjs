@@ -159,8 +159,6 @@ function newProject(name) {
   fs.writeFileSync(name + '/prod/dev.js', dev_js);
   fs.mkdirSync(name + '/prod/components');
 
-  fs.copyFileSync(__filename, name + '/kach.js');
-
   process.chdir(name);
   newComponent('app-root');
   let install = spawn('npm', ['install']);
