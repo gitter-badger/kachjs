@@ -14,6 +14,8 @@ const prettierrc = `{
   "trailingComma": "all",
   "singleQuote": true
 }`;
+const gitignore = `prod/
+node_modules/`;
 function index_html(project, dev) {
   return `<html>
     <head>
@@ -145,6 +147,7 @@ const tsconfig_json = `{
 
 function newProject(name) {
   fs.mkdirSync(name);
+  fs.writeFileSync(name + '/.gitignore', gitignore);
   fs.writeFileSync(name + '/.prettierrc', prettierrc);
   fs.writeFileSync(name + '/package.json', package_json(name));
   fs.writeFileSync(name + '/tsconfig.json', tsconfig_json);
@@ -164,6 +167,9 @@ function newProject(name) {
   let install = spawn('npm', ['install']);
   install.stdout.pipe(process.stdout);
   install.stderr.pipe(process.stderr);
+  let git = spawn('git', ['init']);
+  git.stdout.pipe(process.stdout);
+  git.stderr.pipe(process.stderr);
 }
 
 function parseName(name) {
