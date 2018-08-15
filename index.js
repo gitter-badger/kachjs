@@ -192,6 +192,10 @@ function parseName(name) {
   return name;
 }
 function newComponent(name) {
+  if (!/^[a-z]+-[a-z]+$/.test(name)) {
+    console.error('Component name should only contain lowercase letters and at least one dash(-)');
+    return;
+  }
   fs.mkdirSync(`src/components/${name}`);
   fs.writeFileSync(`src/components/${name}/${name}.html`, `<p>${name} works!</p>`);
   fs.writeFileSync(
@@ -199,8 +203,7 @@ function newComponent(name) {
     `${name}
 \t`,
   );
-  if (name != 'app-root')
-    prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
+  if (name != 'app-root') prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
     `/// <reference path="../../kachjs/component.ts"/>
