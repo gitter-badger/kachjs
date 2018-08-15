@@ -222,7 +222,8 @@ Possible commands:
 \t[n]ew <name> - create new project
 \t[c]omponent <name> - create new component
 \t[s]erve - run live development server
-\t[b]uild (--prod) - build project`);
+\t[b]uild (--prod) - build project
+\t[u]pdate - update KachJS in the existing project`);
 }
 
 async function main() {
@@ -251,7 +252,11 @@ async function main() {
     case 'b':
     case 'build':
       await system('npm', ['run', 'build']);
-      if (process.argv.indexOf('--prod') == -1) fs.writeFileSync('prod/dev.js', dev_js);
+      if (process.argv.indexOf('--prod') === -1) fs.writeFileSync('prod/dev.js', dev_js);
+      break;
+    case 'u':
+    case 'update':
+      ncp(__dirname + '/src/kachjs', 'src/kachjs');
       break;
     default:
       usage();
