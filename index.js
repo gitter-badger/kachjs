@@ -232,7 +232,7 @@ async function main() {
     case 'serve':
       fs.stat('src/kachjs', err => {
         if (err) console.error('src/kachjs folder not found. Aborting.');
-        else system('npm', ['start']).then(process.exit(0));
+        else system('npm', ['start']);
       });
       break;
     case 'n':
