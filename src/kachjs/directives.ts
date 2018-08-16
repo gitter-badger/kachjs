@@ -41,14 +41,16 @@ class KachDirectives {
         }
       }
     }
-    if (parseInnerText && 'innerText' in el) this.el.innerText = this.evalAndReplace(this.el.innerText);
+    this.el.innerHTML = this.evalAndReplace(this.el.innerHTML);
   }
 
   private evalAndReplace(data: string): string {
-    const matches = data.match(/{{.+}}/gm);
+    const matches = data.match(/{{.+?}}/gm);
     if (matches) {
       matches.forEach(match => {
-        data = data.replace(match, eval(match));
+        let binddata = match.slice(2, -2);
+        if (isValidVarName(binddata)) data = data.replace(match, `<kach-data (listen)="${binddata}"></kach-data>`);
+        else data = data.replace(match, eval(match));
       });
     }
     return data;
