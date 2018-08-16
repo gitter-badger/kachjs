@@ -4,9 +4,16 @@ KachJS - minimalistic TypeScript framework
 ## Dependencies
 * sass
 ```
-sudo npm i -g sass
+npm i -g sass
 ```
-
+* TypeScript
+```
+npm i -g typescript
+```
+* Prettier
+```
+npm i -g prettier
+```
 ## Quick start
 Clone this repository:
 ```
@@ -54,11 +61,12 @@ In this example h1 inner text depends on variable "name", which is binded to the
 <input (bind)="name">
 ```
 In this example header listens for changes in "name" variable. Works same as previous example.
-#### (listen:src) - One way binding
+#### (listen:<attribute>), (bind:<attribute>) - One way binding
 ```html
 <img (listen:src)="myphoto">
+<input (listen:placeholder)="placeholder">
 ```
-This attributes binds variable to "src" attribute of calling element.
+These attributes bind variable to defined attribute of calling element.
 #### (model) - One way binding
 ```html
 <h1 (listen)="name"></h1>
@@ -74,15 +82,26 @@ In this example "name" varibale is initialized  with value 'hi there!'.
 #### (for) - Iterate over array or object
 Example:
 ```html
-<p (init)="favourites = ['snickers', 'milky way']" (for)="candy of favourites">I love ${candy}!</p>
+<div (init)="favourites = ['snickers', 'milky way']" (for)="candy of favourites"><div>I love ${candy}!</div></div>
 ```
 "favourites" variable is initalized with ['snickers', 'milky way'] array, for directive iterates over array's values.
 Use "in" instead of "of" to iterate over object's keys, not values.
 To access iterated value, use variable name in "${}" in html, e.g. ${candy}.
+Notice that scope of "${}" value is isolated. That means you can access only this variable and json() function;
+##### json - Convert object to JSON
+Usage:
+```html
+<div (init)="favourites = [{'snickers': true}, {'milky way': false}]" (for)="candy of favourites"><div>${json(candy)}</div></div>
+```
+Output:
+```
+{"snickers":true}
+{"milky way":false}
+```
 #### (if) - Show element conditionnally
 ```html
-<p (if)="{{2 + 2 === 5}}">Wow, 2 + 2 is 5</p>
-<p (if)="{{2 + 2 === 4}}">As always, 2 + 2 is 4</p>
+<p (if)="2 + 2 === 5">Wow, 2 + 2 is 5</p>
+<p (if)="2 + 2 === 4">As always, 2 + 2 is 4</p>
 <p (init)="truth = true" (if)="truth">Everything is truth</p>
 ```
 #### (ifn) - Hide element conditionnally
