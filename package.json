@@ -1,7 +1,7 @@
 {
   "preferGlobal": true,
   "name": "@kachjs/cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "main": "kach.js",
   "bin": {
     "kach": "./index.js"
