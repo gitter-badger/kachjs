@@ -1,6 +1,12 @@
 # kachjs-cli
 KachJS - minimalistic TypeScript framework
 
+## Dependencies
+* sass
+```
+sudo npm i -g sass
+```
+
 ## Quick start
 Clone this repository:
 ```
