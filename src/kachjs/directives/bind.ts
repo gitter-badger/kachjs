@@ -16,27 +16,30 @@ function bind(objname: string) {
 }
 
 class KachBindDirective {
-  constructor(private el: HTMLElement, objname: string) {
+  constructor(private el: HTMLElement, objname: string, attribute?: string) {
     bind(objname);
-    if (this.el instanceof HTMLInputElement) {
-      const input = this.el as HTMLInputElement;
-
-      switch (input.type) {
-        case 'checkbox':
-          input.addEventListener('change', () => ($data[objname] = input.checked || ''));
-          break;
-        case 'text':
-          input.addEventListener('change', () => ($data[objname] = input.value || ''));
-          input.addEventListener('keyup', () => ($data[objname] = input.value || ''));
-          input.addEventListener('keydown', () => ($data[objname] = input.value || ''));
-          break;
-      }
-
-      input.value = $data[objname];
-      $subscribes[objname].push(() => (input.value = $data[objname]));
+    if (attribute) {
+      this.el.setAttribute(attribute, $data[objname]);
+      $subscribes[objname].push(() => this.el.setAttribute(attribute, $data[objname]));
     } else {
-      this.el.innerText = $data[objname];
-      $subscribes[objname].push(() => (this.el.innerText = $data[objname]));
+      if (this.el instanceof HTMLInputElement) {
+        const input = this.el as HTMLInputElement;
+        switch (input.type) {
+          case 'checkbox':
+            input.addEventListener('change', () => ($data[objname] = input.checked || ''));
+            break;
+          case 'text':
+            input.addEventListener('change', () => ($data[objname] = input.value || ''));
+            input.addEventListener('keyup', () => ($data[objname] = input.value || ''));
+            input.addEventListener('keydown', () => ($data[objname] = input.value || ''));
+            break;
+        }
+        input.value = $data[objname];
+        $subscribes[objname].push(() => (input.value = $data[objname]));
+      } else {
+        this.el.innerText = $data[objname];
+        $subscribes[objname].push(() => (this.el.innerText = $data[objname]));
+      }
     }
   }
 }
