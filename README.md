@@ -54,9 +54,9 @@ In this example h1 inner text depends on variable "name", which is binded to the
 <input (bind)="name">
 ```
 In this example header listens for changes in "name" variable. Works same as previous example.
-#### (listen-src) - One way binding
+#### (listen:src) - One way binding
 ```html
-<img (listen-src)="myphoto">
+<img (listen:src)="myphoto">
 ```
 This attributes binds variable to "src" attribute of calling element.
 #### (model) - One way binding
