@@ -1,3 +1,4 @@
+/// <reference path="../varcheck.ts"/>
 class KachForDirective {
   loopData: string[];
   loopDirective: string;
@@ -6,37 +7,24 @@ class KachForDirective {
     this.loopData = loop.split(' ');
     this.loopDirective = this.el.innerHTML;
 
-    if (this.loopData.length !== 3 || !this.loopData[0] || !this.loopData[1] || !this.loopData[2]) this.error();
-    else {
+    if (isValidVarName(this.loopData[2])) {
       bind(this.loopData[2]);
       this.render();
       $subscribes[this.loopData[2]].push(() => this.render());
-    }
+    } else this.render();
   }
   private render() {
-    let newChild = document.createElement('div');
-    switch (this.loopData[1]) {
-      case 'in':
-        for (let val in $data[this.loopData[2]]) {
-          let newItem = document.createElement('div');
-          newItem.innerHTML = this.loopDirective.replace(new RegExp(`\${${this.loopData[0]}}`, 'g'), val.toString());
-          newChild.appendChild(newItem);
-        }
-        break;
-      case 'of':
-        for (let val of $data[this.loopData[2]]) {
-          let newItem = document.createElement('div');
-          newItem.innerHTML = this.loopDirective.replace(new RegExp(`\${${this.loopData[0]}}`, 'g'), val.toString());
-          newChild.appendChild(newItem);
-        }
-        break;
-      default:
-        this.error();
-        break;
-    }
-    this.el.innerHTML = newChild.innerHTML;
-  }
-  private error() {
-    console.error(`Failed to parse (for)="${this.loop}"`);
+    let rendered = '';
+    eval(`
+    for (let ${this.loop}) {
+      let match;
+      let parsed = this.loopDirective;
+      do {
+        match = /\\\${.*}/.exec(parsed);
+        if (match) parsed = parsed.replace(match[0], eval(match[0].slice(2, -1)));
+      } while (match);
+      rendered += parsed;
+    }`);
+    this.el.innerHTML = rendered;
   }
 }
