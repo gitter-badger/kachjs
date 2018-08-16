@@ -50,13 +50,18 @@ const path = require('path');
 let lock = false;
 const spawn = require('child_process').spawn,
   build = () => {
-    if (!lock) {
-      lock = true;
-      let builder = spawn('kach', ['build']);
-      builder.stdout.pipe(process.stdout);
-      builder.stderr.pipe(process.stderr);
-      return builder;
-    } else return { on: () => {} };
+    return new Promise(resolve => {
+      if (!lock) {
+        lock = true;
+        let builder = spawn('kach', ['build']);
+        builder.stdout.pipe(process.stdout);
+        builder.stderr.pipe(process.stderr);
+        builder.on('close', () => {
+          lock = false;
+          resolve();
+        });
+      } else resolve();
+    });
   };
 
 let server = http
@@ -108,14 +113,11 @@ let server = http
   });
 
 let watcher = require('hound').watch('src');
-watcher.on('create', () => build().on('close', () => (lock = false)));
-watcher.on('change', () => build().on('close', () => (lock = false)));
-watcher.on('delete', () => build().on('close', () => (lock = false)));
+watcher.on('create', build);
+watcher.on('change', build);
+watcher.on('delete', build);
 
-build().on('close', () => {
-  lock = false;
-  console.log(\`\x1b[32mServer listening on http://localhost:\${port}\x1b[0m\`);
-});
+build().then(() => console.log(\`\x1b[32mServer listening on http://localhost:\${port}\x1b[0m\`));
 `;
 function package_json(name) {
   return `{
