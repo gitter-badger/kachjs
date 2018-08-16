@@ -20,7 +20,7 @@ class KachBindDirective {
     bind(objname);
     if (args[0]) {
       this.el.setAttribute(args[0], $data[objname]);
-      $subscribes[objname].push(() => this.el.setAttribute(args[0], $data[objname]));
+      subscribe(objname, () => this.el.setAttribute(args[0], $data[objname]));
     } else {
       if (this.el instanceof HTMLInputElement) {
         const input = this.el as HTMLInputElement;
@@ -35,10 +35,10 @@ class KachBindDirective {
             break;
         }
         input.value = $data[objname];
-        $subscribes[objname].push(() => (input.value = $data[objname]));
+        subscribe(objname, () => (input.value = $data[objname]));
       } else {
         this.el.innerText = $data[objname];
-        $subscribes[objname].push(() => (this.el.innerText = $data[objname]));
+        subscribe(objname, () => (this.el.innerText = $data[objname]));
       }
     }
   }

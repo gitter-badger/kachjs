@@ -11,7 +11,7 @@ class KachForDirective {
       bind(this.loopData[2]);
       this.loop = `${this.loopData[0]} ${this.loopData[1]} $data['${this.loopData[2]}']`;
       this.render();
-      $subscribes[this.loopData[2]].push(() => this.render());
+      subscribe(this.loopData[2], () => this.render());
     } else this.render();
   }
   private render() {

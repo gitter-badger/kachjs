@@ -3,16 +3,17 @@ class KachListenDirective {
     bind(objname);
     if (args[0]) {
       this.el.setAttribute(args[0], $data[objname]);
-      $subscribes[objname].push(() => this.el.setAttribute(args[0], $data[objname]));
+      subscribe(objname, () => this.el.setAttribute(args[0], $data[objname]));
     } else {
-      if (this.el instanceof HTMLInputElement) {
-        const input = this.el as HTMLInputElement;
-        input.value = $data[objname];
-        $subscribes[objname].push(() => (input.value = $data[objname]));
-      } else {
-        this.el.innerText = $data[objname];
-        $subscribes[objname].push(() => (this.el.innerText = $data[objname]));
-      }
+      let isInput = this.el instanceof HTMLInputElement;
+      if (isInput) (this.el as HTMLInputElement).value = $data[objname];
+      else this.el.innerText = $data[objname];
+      subscribe(
+        objname,
+        isInput
+          ? () => ((this.el as HTMLInputElement).value = $data[objname])
+          : () => (this.el.innerText = $data[objname]),
+      );
     }
   }
 }

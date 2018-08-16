@@ -9,6 +9,11 @@ function traverseNodes(el: HTMLElement) {
 var $data: { [key: string]: any } = {};
 var $subscribes: { [key: string]: Function[] } = {};
 
+function subscribe(objname: string, callback: Function) {
+  if (!$subscribes[objname]) $subscribes[objname] = [];
+  $subscribes[objname].push(callback);
+}
+
 @Component('kach-data')
 class KachDataComponent extends KachComponent {
   constructor() {
