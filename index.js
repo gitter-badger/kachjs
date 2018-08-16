@@ -127,33 +127,33 @@ build().on('close', () => {
 `;
 function package_json(name) {
   return `{
-    "name": "${name}",
-    "dependencies": {
-      "hound": "^1.0.5",
-      "sse": "0.0.8"
-    },
-    "scripts": {
-      "build": "prettier --write \\"src/**/*.ts\\" && tsc && cp src/index.html prod/ && cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
-      "start": "node server.js"
-    },
-    "devDependencies": {}
+  "name": "${name}",
+  "dependencies": {
+    "hound": "^1.0.5",
+    "sse": "0.0.8"
+  },
+  "scripts": {
+    "build": "prettier --write \\"src/**/*.ts\\" && tsc && cp src/index.html prod/ && cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
+    "start": "node server.js"
+  },
+  "devDependencies": {}
 }`;
 }
 const tsconfig_json = `{
-    "compilerOptions": {
-      "target": "es2015",
-      "lib": ["dom", "es2015"],
-      "outFile": "./prod/app.js",
-      "rootDir": "./src",
-      "removeComments": true,
-      "strict": true,
-      "noImplicitReturns": true,
-      "esModuleInterop": true,
-      "experimentalDecorators": true,
-    },
-    "exclude": [
-      "prod"
-    ]
+  "compilerOptions": {
+    "target": "es2015",
+    "lib": ["dom", "es2015"],
+    "outFile": "./prod/app.js",
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
+    "noImplicitReturns": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+  },
+  "exclude": [
+    "prod"
+  ]
 }`;
 
 async function newProject(name) {
@@ -205,12 +205,12 @@ function newComponent(name) {
   fs.writeFileSync(
     `src/components/${name}/component.ts`,
     `/// <reference path="../../kachjs/component.ts"/>
-  @Component('${name}')
-  class ${parseName(name)}Component extends KachComponent {
-    constructor() {
-      super('${name}');
-    }
+@Component('${name}')
+class ${parseName(name)}Component extends KachComponent {
+  constructor() {
+    super('${name}');
   }
+}
 `,
   );
 }
