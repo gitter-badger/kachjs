@@ -9,22 +9,27 @@ class KachForDirective {
 
     if (isValidVarName(this.loopData[2])) {
       bind(this.loopData[2]);
+      this.loop = `${this.loopData[0]} ${this.loopData[1]} $data['${this.loopData[2]}']`;
       this.render();
       $subscribes[this.loopData[2]].push(() => this.render());
     } else this.render();
   }
   private render() {
     let rendered = '';
-    eval(`
+    eval(
+      `
     for (let ${this.loop}) {
       let match;
       let parsed = this.loopDirective;
       do {
         match = /\\\${.*}/.exec(parsed);
-        if (match) parsed = parsed.replace(match[0], eval(match[0].slice(2, -1)));
+        if (match) parsed = parsed.replace(match[0], eval(\`(function(\${this.loopData[0]}, json) {return \${match[0].slice(2, -1)}})(${
+          this.loopData[0]
+        }, JSON.stringify)\`));
       } while (match);
       rendered += parsed;
-    }`);
+    }`,
+    );
     this.el.innerHTML = rendered;
   }
 }
