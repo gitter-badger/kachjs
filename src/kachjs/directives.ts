@@ -6,7 +6,7 @@ class KachDirectives {
       });
     },
     '(init)': (action: string) => {
-      new KachInitDirective(this.el, action);
+      new KachInitDirective(action);
     },
     '(if)': (action: string) => {
       new KachIfDirective(this.el, action);
