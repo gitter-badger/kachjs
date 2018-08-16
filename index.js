@@ -29,6 +29,8 @@ node_modules/`;
 function index_html(project, dev) {
   return `<html>
     <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
         <title>${project}</title>
         <link rel="stylesheet" href="styles.css">
     </head>
@@ -252,7 +254,15 @@ async function main() {
     case 'b':
     case 'build':
       await system('npm', ['run', 'build']);
-      if (process.argv.indexOf('--prod') === -1) fs.writeFileSync('prod/dev.js', dev_js);
+      if (process.argv.indexOf('--prod') === -1) {
+        prependFile('prod/app.js', 
+`console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
+var es = new EventSource("/sse");
+es.onmessage = () => {
+    console.log("Update detected. Reloading...");
+    location.reload();
+};`);
+      }
       break;
     case 'u':
     case 'update':

@@ -23,7 +23,7 @@
     "sse": "0.0.8"
   },
   "scripts": {
-    "build": "prettier --write \"src/**/*.ts\" && tsc && cp src/index.html prod/ && cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
+    "build": "/usr/bin/env bash scripts/build.sh",
     "start": "node server.js"
   },
   "devDependencies": {}
