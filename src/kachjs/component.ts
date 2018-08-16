@@ -8,13 +8,14 @@ function Component(selector: string) {
 class KachComponent extends HTMLElement {
   innerData?: string;
 
-  constructor(selector: string) {
+  constructor(selector: string, noTemplate?: boolean) {
     super();
     this.innerData = this.innerHTML;
-    getComponentTemplate(selector).then(template => {
-      this.innerHTML = (template as string).replace(/{{data}}/g, this.innerData || '');
-      // We get DOM updated, so that we traverse this node again
-      traverseNodes(this);
-    });
+    if (!noTemplate)
+      getComponentTemplate(selector).then(template => {
+        this.innerHTML = (template as string).replace(/{{@data}}/g, this.innerData || '');
+        // We get DOM updated, so that we traverse this node again
+        traverseNodes(this);
+      });
   }
 }
