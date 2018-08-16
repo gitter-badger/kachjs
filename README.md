@@ -39,12 +39,11 @@ For CLI usage you can use command ```kach```
 ## Reference
 ### Components
 You can create components with custom template and css.
-```
-kach component my-awesome-component
-```
+```kach component my-awesome-component```
+Shorthand: ```kach c my-awesome-component```
 New folder called my-awesome-component will be created.
-Make changes in app-root.html:
-```
+Now you can use it in app-root.html:
+```html
 <my-awesome-component></my-awesome-component>
 ```
 ### Attributes [directives]
