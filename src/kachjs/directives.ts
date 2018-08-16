@@ -28,6 +28,9 @@ class KachDirectives {
       this.applyAttribute('(listen)', (objname: string) => {
         new KachListenDirective(this.el, objname);
       });
+      this.applyAttribute('(listen-src)', (objname: string) => {
+        new KachListenDirective(this.el, objname, 'src');
+      });
     }
     if (this.el.hasAttributes()) {
       for (let i = 0; i < this.el.attributes.length; i++)
