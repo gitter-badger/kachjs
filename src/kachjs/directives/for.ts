@@ -19,14 +19,14 @@ class KachForDirective {
       case 'in':
         for (let val in $data[this.loopData[2]]) {
           let newItem = document.createElement('div');
-          newItem.innerHTML = this.loopDirective.replace(`\${${this.loopData[0]}}`, val.toString());
+          newItem.innerHTML = this.loopDirective.replace(new RegExp(`\${${this.loopData[0]}}`, 'g'), val.toString());
           newChild.appendChild(newItem);
         }
         break;
       case 'of':
         for (let val of $data[this.loopData[2]]) {
           let newItem = document.createElement('div');
-          newItem.innerHTML = this.loopDirective.replace(`\${${this.loopData[0]}}`, val.toString());
+          newItem.innerHTML = this.loopDirective.replace(new RegExp(`\${${this.loopData[0]}}`, 'g'), val.toString());
           newChild.appendChild(newItem);
         }
         break;
