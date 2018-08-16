@@ -255,13 +255,15 @@ async function main() {
     case 'build':
       await system('npm', ['run', 'build']);
       if (process.argv.indexOf('--prod') === -1) {
-        prependFile('prod/app.js', 
-`console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
+        prependFile(
+          'prod/app.js',
+          `console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
 var es = new EventSource("/sse");
 es.onmessage = () => {
     console.log("Update detected. Reloading...");
     location.reload();
-};`);
+};`,
+        );
       }
       break;
     case 'u':
