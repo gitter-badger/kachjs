@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const ncp = require('ncp').ncp;
-const prependFile = require('prepend-file');
+const prependFile = require('prepend-file'),
+  prependFileSync = prependFile.sync;
 const spawn = require('child_process').spawn;
 
 function system(pr, args) {
@@ -248,7 +249,7 @@ async function main() {
     case 'b':
     case 'build':
       await system('npm', ['run', 'build']);
-      if (process.argv.indexOf('--prod') === -1) prependFile('prod/app.js', dev_js);
+      if (process.argv.indexOf('--prod') === -1) prependFileSync('prod/app.js', dev_js);
       break;
     case 'u':
     case 'update':
