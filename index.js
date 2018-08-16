@@ -149,6 +149,16 @@ const tsconfig_json = `{
     "prod"
   ]
 }`;
+function component_ts(name) {
+  return `/// <reference path="../../kachjs/component.ts"/>
+@Component('${name}')
+class ${parseName(name)}Component extends KachComponent {
+  constructor() {
+    super('${name}');
+  }
+}
+`;
+}
 
 async function newProject(name) {
   fs.mkdirSync(name);
@@ -168,6 +178,8 @@ async function newProject(name) {
 
   process.chdir(name);
   newComponent('app-root');
+  prependFile('src/components/app-root.ts', `/// <reference path="../../kachjs/init.ts"/>`);
+
   await system('npm', ['install']);
   await system('git', ['init']);
   await system('git', ['add', '--all']);
@@ -196,17 +208,7 @@ function newComponent(name) {
 \t`,
   );
   if (name != 'app-root') prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
-  fs.writeFileSync(
-    `src/components/${name}/component.ts`,
-    `/// <reference path="../../kachjs/component.ts"/>
-@Component('${name}')
-class ${parseName(name)}Component extends KachComponent {
-  constructor() {
-    super('${name}');
-  }
-}
-`,
-  );
+  fs.writeFileSync(`src/components/${name}/component.ts`, component_ts(name));
 }
 
 function usage() {
