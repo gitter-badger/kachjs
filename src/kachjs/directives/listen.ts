@@ -1,9 +1,9 @@
 class KachListenDirective {
-  constructor(private el: HTMLElement, objname: string, attribute?: string) {
+  constructor(private el: HTMLElement, objname: string, ...args: string[]) {
     bind(objname);
-    if (attribute) {
-      this.el.setAttribute(attribute, $data[objname]);
-      $subscribes[objname].push(() => this.el.setAttribute(attribute, $data[objname]));
+    if (args[0]) {
+      this.el.setAttribute(args[0], $data[objname]);
+      $subscribes[objname].push(() => this.el.setAttribute(args[0], $data[objname]));
     } else {
       if (this.el instanceof HTMLInputElement) {
         const input = this.el as HTMLInputElement;

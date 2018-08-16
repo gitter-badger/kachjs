@@ -36,7 +36,7 @@ class KachDirectives {
           let args = this.el.attributes[i].name.slice(1, -1).split(':');
           let directive = `(${args[0]})`;
           if (this.directives[directive]) {
-            this.directives[directive](this.el.attributes[i].value, args.slice(1));
+            this.directives[directive](this.el.attributes[i].value, ...args.slice(1));
           }
         }
       }
