@@ -39,8 +39,12 @@ For CLI usage you can use command ```kach```
 ## Reference
 ### Components
 You can create components with custom template and css.
-```kach component my-awesome-component```
+```
+kach component my-awesome-component
+```
+
 Shorthand: ```kach c my-awesome-component```
+
 New folder called my-awesome-component will be created.
 Now you can use it in app-root.html:
 ```html
@@ -108,4 +112,43 @@ Output:
 <p (ifn)="{{2 + 2 === 5}}">2 + 2 is not 5</p>
 <p (ifn)="{{2 + 2 === 4}}">2 + 2 is 4, it's true</p>
 <p (init)="truth = false" (ifn)="truth">Everything is false</p>
+```
+### Advanced
+#### Eval {{expression}} syntax
+```html
+<p>This expression is precomputed: {{2 + 2}}</p>
+<p (init)="x = 4 + 4">This expression is binded to "x" variable: {{x}}</p>
+```
+KachJS defines and uses
+```
+$data
+$subscribes
+```
+global variables. $data is used to store variables.
+Example:
+```html
+<h1 (init)="title = 'Add more A: '">{{title}}</h1>
+<button (click)="$data['title'] += 'A'">Add A here</button>
+```
+In this example $data['title'] is initialized with value 'Add more A: ' and then button click adds 'A' to the var.
+#### Reactiveness
+KachJS reactiveness mechanism is quite simple: item is initialized in $data variable with setter invoking all functions in corresponding $subscribes object. To subscribe on change of some variable in $data, push callback in $subscribes or use subscribe function. Example:
+```html
+<!-- app-root.html -->
+<h1 (init)="title = 'hello!'" (listen)="title"></h1>
+```
+component.ts:
+```
+/// <reference path="../../kachjs/init.ts"/>
+/// <reference path="../../kachjs/component.ts"/>
+@Component('app-root')
+class AppRootComponent extends KachComponent {
+  constructor() {
+    super('app-root');
+    setTimeout(() => {
+      $data['title'] = 'hi there!';
+    }, 500);
+    subscribe('title', () => console.log('title has changed!'));
+  }
+}
 ```
