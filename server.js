@@ -73,5 +73,5 @@ watcher.on('delete', () => build().on('close', () => (lock = false)));
 
 build().on('close', () => {
   lock = false;
-  console.log(`\x1b[32mServer listening on port ${port}\x1b[0m`);
+  console.log(`\x1b[32mServer listening on http://localhost:${port}\x1b[0m`);
 });
