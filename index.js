@@ -13,7 +13,7 @@ function system(pr, args) {
   });
 }
 
-const dev_js = `console.warn('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
+const dev_js = `console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
 var es = new EventSource("/sse");
 es.onmessage = () => {
     console.log("Update detected. Reloading...");
