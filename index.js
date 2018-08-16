@@ -26,7 +26,7 @@ const prettierrc = `{
 }`;
 const gitignore = `prod/
 node_modules/`;
-function index_html(project, dev) {
+function index_html(project) {
   return `<html>
     <head>
         <meta charset="utf-8">
@@ -36,7 +36,7 @@ function index_html(project, dev) {
     </head>
     <body>
         <app-root></app-root>
-        <script src="app.js"></script>${dev ? `<script src="dev.js"></script>` : ``}
+        <script src="app.js"></script>
     </body>
 </html>`;
 }
@@ -159,7 +159,7 @@ async function newProject(name) {
   fs.writeFileSync(name + '/server.js', server_js);
 
   fs.mkdirSync(name + '/src');
-  fs.writeFileSync(name + '/src/index.html', index_html(name, true));
+  fs.writeFileSync(name + '/src/index.html', index_html(name));
   ncp(__dirname + '/src/kachjs', name + '/src/kachjs');
   fs.mkdirSync(name + '/src/components');
 
