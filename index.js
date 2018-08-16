@@ -52,7 +52,7 @@ const spawn = require('child_process').spawn,
   build = () => {
     if (!lock) {
       lock = true;
-      let builder = spawn('npm', ['run', 'build']);
+      let builder = spawn('kach', ['build']);
       builder.stdout.pipe(process.stdout);
       builder.stderr.pipe(process.stderr);
       return builder;
@@ -61,14 +61,11 @@ const spawn = require('child_process').spawn,
 
 let server = http
   .createServer(function(req, res) {
-    // parse URL
+    res.setHeader('Cache-Control', 'no-cache');
     const parsedUrl = url.parse(req.url);
-    // extract URL path
     let pathname = \`.\${parsedUrl.pathname}\`;
     pathname = './prod/' + pathname.substr(2);
-    // based on the URL path, extract the file extention. e.g. .js, .doc, ...
     const ext = path.parse(pathname).ext || '.html';
-    // maps file extention to MIME typere
     const map = {
       '.ico': 'image/x-icon',
       '.html': 'text/html',
@@ -83,25 +80,18 @@ let server = http
       '.pdf': 'application/pdf',
       '.doc': 'application/msword',
     };
-
     fs.exists(pathname, function(exist) {
       if (!exist) {
-        // if the file is not found, return 404
         res.statusCode = 404;
         res.end(\`File \${pathname} not found!\`);
         return;
       }
-
-      // if is a directory search for index file matching the extention
       if (fs.statSync(pathname).isDirectory()) pathname += '/index.html';
-
-      // read file from file system
       fs.readFile(pathname, function(err, data) {
         if (err) {
           res.statusCode = 500;
           res.end(\`Error getting the file: \${err}.\`);
         } else {
-          // if the file is found, set Content-type and send data
           res.setHeader('Content-type', map[ext] || 'text/plain');
           res.end(data);
         }
@@ -124,7 +114,7 @@ watcher.on('delete', () => build().on('close', () => (lock = false)));
 
 build().on('close', () => {
   lock = false;
-  console.log(\`Server listening on port \${port}\`);
+  console.log(\`\x1b[32mServer listening on port \${port}\x1b[0m\`);
 });
 `;
 function package_json(name) {
@@ -254,17 +244,7 @@ async function main() {
     case 'b':
     case 'build':
       await system('npm', ['run', 'build']);
-      if (process.argv.indexOf('--prod') === -1) {
-        prependFile(
-          'prod/app.js',
-          `console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
-var es = new EventSource("/sse");
-es.onmessage = () => {
-    console.log("Update detected. Reloading...");
-    location.reload();
-};`,
-        );
-      }
+      if (process.argv.indexOf('--prod') === -1) prependFile('prod/app.js', dev_js);
       break;
     case 'u':
     case 'update':
