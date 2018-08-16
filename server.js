@@ -11,7 +11,7 @@ const spawn = require('child_process').spawn,
   build = () => {
     if (!lock) {
       lock = true;
-      let builder = spawn('npm', ['run', 'build']);
+      let builder = spawn('kach', ['build']);
       builder.stdout.pipe(process.stdout);
       builder.stderr.pipe(process.stderr);
       return builder;
