@@ -47,7 +47,8 @@ const url = require('url');
 const http = require('http');
 const path = require('path');
 
-let lock = false, lock2 = false;
+let lock = false,
+  lock2 = false;
 const spawn = require('child_process').spawn,
   build = () => {
     return new Promise(resolve => {
