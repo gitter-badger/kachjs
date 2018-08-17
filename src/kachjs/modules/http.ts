@@ -5,6 +5,7 @@ interface HTTPRequest {
   method: string;
 
   body?: any;
+  parseJSON?: boolean;
 }
 
 function $http<T>(requestData: HTTPRequest): Promise<T> {
@@ -21,10 +22,8 @@ function $http<T>(requestData: HTTPRequest): Promise<T> {
     request.onreadystatechange = () => {
       if (request.readyState === 4) {
         if (request.status !== 200) reject(request.statusText);
-        else {
-          if (request.responseType === 'json') resolve(JSON.parse(request.responseText) as T);
-          else resolve(request.responseText as any);
-        }
+        else if (requestData.parseJSON) resolve(JSON.parse(request.responseText) as T);
+        else resolve(request.responseText as any);
       }
     };
   });
