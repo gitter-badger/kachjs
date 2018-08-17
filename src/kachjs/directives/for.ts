@@ -14,22 +14,41 @@ class KachForDirective {
       subscribe(this.loopData[2], () => this.render());
     } else this.render();
   }
+  private findClosingBracket(str: string, l: number) {
+    l = str.indexOf('{', l);
+    let stack = 0;
+    let r: number;
+    do {
+      if (str[l] === '{') stack++;
+      else if (str[l] === '}') {
+        stack--;
+        r = l;
+      }
+      l++;
+    } while (stack);
+    return r!;
+  }
   private render() {
     let rendered = '';
-    eval(
-      `
-    for (let ${this.loop}) {
+    eval(`for (let ${this.loop}) {
       let match;
       let parsed = this.loopDirective;
       do {
-        match = /\\\${.*}/.exec(parsed);
-        if (match) parsed = parsed.replace(match[0], eval(\`(function(\${this.loopData[0]}, json) {return \${match[0].slice(2, -1)}})(${
-          this.loopData[0]
-        }, JSON.stringify)\`));
+        match = /\\\${/.exec(parsed);
+        if (match) {
+          let directive = parsed.slice(match.index, this.findClosingBracket(parsed, match.index) + 1);
+          parsed = parsed.replace(
+            directive,
+            eval(
+              \`(function(${this.loopData[0]}, json) {return \${directive.slice(2, -1)}})(${
+      this.loopData[0]
+    }, JSON.stringify)\`,
+            ),
+          );
+        }
       } while (match);
       rendered += parsed;
-    }`,
-    );
+    }`);
     this.el.innerHTML = rendered;
   }
 }
