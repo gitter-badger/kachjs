@@ -205,7 +205,7 @@ async function newProject(name) {
 
   process.chdir(name);
   newComponent('app-root');
-  prependFile('src/components/app-root/app-root.ts', `/// <reference path="../../kachjs/init.ts"/>`);
+  prependFile('src/components/app-root/component.ts', '/// <reference path="../../kachjs/init.ts"/>\n');
 
   await system('npm', ['install']);
   await system('git', ['init']);
