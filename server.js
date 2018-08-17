@@ -10,16 +10,19 @@ let lock = false;
 const spawn = require('child_process').spawn,
   build = () => {
     return new Promise(resolve => {
-      if (!lock) {
-        lock = true;
-        let builder = spawn('kach', ['build']);
-        builder.stdout.pipe(process.stdout);
-        builder.stderr.pipe(process.stderr);
-        builder.on('close', () => {
-          lock = false;
-          resolve();
-        });
-      } else resolve();
+      let build_routine = () => {
+        if (!lock) {
+          lock = true;
+          let builder = spawn('kach', ['build']);
+          builder.stdout.pipe(process.stdout);
+          builder.stderr.pipe(process.stderr);
+          builder.on('close', () => {
+            lock = false;
+            resolve();
+          });
+        } else build_routine();
+      };
+      build_routine();
     });
   };
 
