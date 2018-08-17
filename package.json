@@ -14,9 +14,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zolbooo/kachjs-cli/issues"
+    "url": "https://github.com/zolbooo/kachjs/issues"
   },
-  "homepage": "https://github.com/zolbooo/kachjs-cli/issues",
+  "homepage": "https://github.com/zolbooo/kachjs",
   "dependencies": {
     "hound": "^1.0.5",
     "ncp": "^2.0.0",
