@@ -60,33 +60,26 @@ const url = require('url');
 const http = require('http');
 const path = require('path');
 
-let lock = false,
-  lock2 = false;
+let lock = false;
 const spawn = require('child_process').spawn,
-  build = () => {
-    return new Promise(resolve => {
-      let build_routine = () => {
-        if (!lock) {
-          lock = true;
-          let builder = spawn('kach', ['build']);
-          builder.stdout.pipe(process.stdout);
-          builder.stderr.pipe(process.stderr);
-          builder.on('close', () => {
-            lock = false;
-            resolve();
-          });
-        } else if (!lock2) {
-          lock2 = true;
-          process.nextTick(() => {
-            build_routine();
-            lock2 = false;
-          });
-        } else resolve();
-      };
-      build_routine();
-    });
-  };
+build = () => {
+  return new Promise(resolve => {
+    if (!lock) {
+      lock = true;
+      let builder = spawn('kach', ['build']);
+      builder.stdout.pipe(process.stdout);
+      builder.stderr.pipe(process.stderr);
+      builder.on('close', () => {
+        lock = false;
+        $subscribes.forEach(subscribe => subscribe());
+        resolve();
+      });
+    }
+    resolve();
+  });
+};
 
+let $subscribes = [];
 let server = http
   .createServer(function(req, res) {
     res.setHeader('Cache-Control', 'no-cache');
@@ -128,11 +121,7 @@ let server = http
   })
   .listen(port, '0.0.0.0', () => {
     var ss = new sse(server);
-    ss.on('connection', client => {
-      fs.watch('prod').on('change', () => {
-        client.send('update');
-      });
-    });
+    ss.on('connection', client => $subscribes.push(() => client.send('update')));
   });
 
 let watcher = require('hound').watch('src');
