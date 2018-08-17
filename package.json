@@ -1,6 +1,7 @@
 {
   "preferGlobal": true,
   "name": "@kachjs/cli",
+  "description": "KachJS - Minimalistic TypeScript framework",
   "version": "0.2.0",
   "main": "kach.js",
   "bin": {
