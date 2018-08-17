@@ -24,6 +24,7 @@
   },
   "scripts": {
     "build": "/usr/bin/env bash scripts/build.sh",
+    "build-dev": "/usr/bin/env bash scripts/build.sh dev",
     "start": "node server.js"
   },
   "devDependencies": {}
