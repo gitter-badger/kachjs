@@ -13,12 +13,25 @@ function system(pr, args) {
   });
 }
 
-const dev_js = `console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
+const build_sh = `mkdir prod 2>/dev/null
+mkdir prod/components 2>/dev/null
+prettier --write "src/**/*.ts"
+tsc || exit 1
+if [ "$1" == "dev" ]
+then
+    cat << EOF > prod/app.js
+console.info('This app is built with development server. To compile app in production mode use "kach build --prod" command.');
 var es = new EventSource("/sse");
 es.onmessage = () => {
     console.log("Update detected. Reloading...");
     location.reload();
-};`;
+};
+$(cat prod/app.js)
+EOF
+fi
+cp src/index.html prod/
+cp src/components/**/*.html prod/components/
+sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1`;
 const prettierrc = `{
   "printWidth": 120,
   "trailingComma": "all",
@@ -137,7 +150,8 @@ function package_json(name) {
     "sse": "0.0.8"
   },
   "scripts": {
-    "build": "prettier --write \\"src/**/*.ts\\" && tsc && cp src/index.html prod/ && cp src/components/**/*.html prod/components/ && sass src/components/app-root/app-root.sass prod/styles.css --no-source-map",
+    "build": "/usr/bin/env bash scripts/build.sh",
+    "build-dev": "/usr/bin/env bash scripts/build.sh dev",
     "start": "node server.js"
   },
   "devDependencies": {}
@@ -177,6 +191,9 @@ async function newProject(name) {
   fs.writeFileSync(name + '/package.json', package_json(name));
   fs.writeFileSync(name + '/tsconfig.json', tsconfig_json);
   fs.writeFileSync(name + '/server.js', server_js);
+
+  fs.mkdirSync(name + '/scripts');
+  fs.writeFileSync(name + '/scripts/build.sh', build_sh);
 
   fs.mkdirSync(name + '/src');
   fs.writeFileSync(name + '/src/index.html', index_html(name));
