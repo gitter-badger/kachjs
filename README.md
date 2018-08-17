@@ -145,6 +145,27 @@ class AppRootComponent extends KachComponent {
   }
 }
 ```
+#### Functions
+##### $http - send asynchronous HTTP request
+```
+interface HTTPRequest {
+  headers?: { [key: string]: string };
+
+  url: string;
+  method: string;
+
+  body?: any;
+  parseJSON?: boolean;
+}
+
+function $http<T>(requestData: HTTPRequest): Promise<T>
+```
+$http sends HTTP request and returns promise with response body. If parseJSON is set, response body is parsed and returned in Promise, otherwise string casted to T is returned.
+##### subscribe - listen for changes in the variable
+```
+function subscribe(objname: string, callback: Function)
+```
+subscribe adds callback invoked on `$data[objname]`'s change.
 #### Comparation to other frameworks
 ##### Counter app
 KachJS
