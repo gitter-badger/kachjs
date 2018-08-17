@@ -15,14 +15,9 @@ npm i -g typescript
 npm i -g prettier
 ```
 ## Quick start
-Clone this repository:
+Install this package:
 ```
-git clone https://github.com/zolbooo/kachjs-cli.git
-```
-Go to the directory and install package globally:
-```
-cd kachjs-cli
-npm install -g
+npm i -g kachjs
 ```
 Create new project:
 ```
