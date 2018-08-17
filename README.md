@@ -1,6 +1,4 @@
-# kachjs-cli
-KachJS - minimalistic TypeScript framework
-
+# KachJS - minimalistic TypeScript framework
 ## Dependencies
 * sass
 ```
@@ -146,4 +144,266 @@ class AppRootComponent extends KachComponent {
     subscribe('title', () => console.log('title has changed!'));
   }
 }
+```
+#### Comparation to other frameworks
+##### Counter app
+KachJS
+```html
+<h1 (init)="count = 0">{{count}}</h1>
+<button (click)="$data['count']--">-</button>
+<button (click)="$data['count']++">+</button>
+```
+React
+```
+import React from "react";
+import ReactDOM from "react-dom";
+
+class Counter extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { count: 0};
+    }
+
+    down(value) {
+        this.setState(state => ({ count: state.count - value }));
+    }
+    up(value) {
+        this.setState(state => ({ count: state.count + value }));
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>{this.state.count}</h1>
+                <button onClick = {() => this.down(1)}>-</button>
+                <button onClick = {() => this.up(1)}>+</button>
+            </div>
+        );
+    }
+}
+ReactDOM.render(<Counter />, document.querySelector("#app"));
+```
+Vue
+```
+import Vue from "vue";
+
+new Vue({
+    data: { count: 0 },
+
+    methods: {
+        down: function(value) {
+            this.count -= value;
+        },
+        up: function(value) {
+            this.count += value;
+        }
+    },
+
+    render: function(h) {
+        return(
+            <div>
+                <h1>{this.count}</h1>
+                <button onClick={() => this.down(1)}>-</button>
+                <button onClick={() => this.up(1)}>+</button>
+            </div>
+        );
+    },
+
+    el: "#app"
+});
+```
+Hyperapp
+```
+import { h, app } from "hyperapp";
+
+const state = {
+    count: 0
+};
+
+const actions = {
+    down: value => state => ({ count: state.count - value}),
+    up: value => state => ({ count: state.count + value})
+};
+
+const view = (state, actions) => (
+    <div>
+        <h1>{state.count}</h1>
+        <button onclick={() => actions.down(1)}>-</button>
+        <button onclick={() => actions.up(1)}>+</button>
+    </div>
+);
+
+app(state, actions, view, document.querySelector("#app"));
+```
+Svelte
+```
+<div>
+  <h1>{count}</h1>
+  <button on:click="set({count: count - 1})">-</button>
+  <button on:click="set({count: count + 1})">+</button>
+</div>
+```
+#### Asynchronous app
+KachJS
+
+app-root.html
+```html
+<button (click)="getPosts()">Get posts</button>
+<div (for)="post of posts">
+    <div id="${post.id}">
+        <h2><font color="#3AC1EF">${post.title}</font></h2>
+        <p>${post.body}</p>
+    </div>
+</div>
+```
+component.ts
+```
+/// <reference path="../../kachjs/init.ts"/>
+/// <reference path="../../kachjs/component.ts"/>
+@Component('app-root')
+class AppRootComponent extends KachComponent {
+  constructor() {
+    super('app-root');
+    $data['posts'] = [];
+  }
+}
+
+interface Post {
+  id: number;
+  userId: number;
+  title: string;
+  body: string;
+}
+function getPosts() {
+  $http<Post[]>({ url: 'https://jsonplaceholder.typicode.com/posts', method: 'GET', parseJSON: true }).then(data => {
+    $data['posts'] = data;
+  });
+}
+```
+React
+```
+import React from "react";
+import ReactDOM from "react-dom";
+
+class PostViewer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { posts: [] };
+    }
+
+    getData() {
+        fetch(`https://jsonplaceholder.typicode.com/posts`)
+        .then(response => response.json())
+        .then(json => {
+            this.setState(state => ({ posts: json}));
+        });
+    }
+
+    render() {
+        return (
+            <div>
+                <button onClick={() => this.getData()}>Get posts</button>
+                {this.state.posts.map(post => (
+                    <div key={post.id}>
+                        <h2><font color="#3AC1EF">{post.title}</font></h2>
+                        <p>{post.body}</p>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+}
+
+ReactDOM.render(<PostViewer />, document.querySelector("#app"));
+```
+Vue
+```
+import Vue from "vue";
+
+new Vue({
+    data: { posts: [] },
+
+    methods: {
+        getData: function(value) {
+            fetch(`https://jsonplaceholder.typicode.com/posts`)
+            .then(response => response.json())
+            .then(json => {
+                this.posts = json;
+            });
+        }
+    },
+
+    render: function(h) {
+        return (
+            <div>
+                <button onClick={() => this.getData()}>Get posts</button>
+                {this.posts.map(post => (
+                    <div key={post.id}>
+                        <h2><font color="#3AC1EF">{post.title}</font></h2>
+                        <p>{post.body}</p>
+                    </div>
+                ))}
+            </div>
+        );
+    },
+
+    el: "#app"
+});
+```
+Hyperapp
+```
+import { h, app } from "hyperapp";
+
+const state = {
+    posts: []
+};
+
+const actions = {
+    getData: () => (state, actions) => {
+        fetch(`https://jsonplaceholder.typicode.com/posts`)
+        .then(response => response.json())
+        .then(json => {
+            actions.getDataComplete(json);
+        });
+    },
+    getDataComplete: data => state => ({ posts: data })
+};
+
+const view = (state, actions) => (
+    <div>
+        <button onclick={() => actions.getData()}>Get posts</button>
+        {state.posts.map(post => (
+            <div key={post.id}>
+                <h2><font color="#3AC1EF">{post.title}</font></h2>
+                <p>{post.body}</p>
+            </div>
+        ))}
+    </div>
+);
+
+app(state, actions, view, document.querySelector("#app"));
+```
+Svelte
+```
+<div>
+  <button on:click="getData()">Get posts</button>
+  {#each posts as {title, body}}
+  <div>
+    <h2><font color="#3AC1EF">{title}</font></h2>
+    <p>{body}</p>
+  </div>
+  {/each}
+</div>
+
+<script>
+  export default {
+    methods: {
+      getData() {
+        fetch('https://jsonplaceholder.typicode.com/posts')
+          .then(res => res.json())
+          .then(posts => this.set({ posts }));
+      }
+    }
+  };
+</script>
 ```
