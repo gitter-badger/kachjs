@@ -6,7 +6,7 @@ const url = require('url');
 const http = require('http');
 const path = require('path');
 
-let lock = false;
+let lock = false, lock2 = false;
 const spawn = require('child_process').spawn,
   build = () => {
     return new Promise(resolve => {
@@ -20,7 +20,13 @@ const spawn = require('child_process').spawn,
             lock = false;
             resolve();
           });
-        } else build_routine();
+        } else if (!lock2) {
+          lock2 = true;
+          process.nextTick(() => {
+            build_routine();
+            lock2 = false;
+          });
+        } else resolve();
       };
       build_routine();
     });
