@@ -2,7 +2,7 @@
   "preferGlobal": true,
   "name": "kachjs",
   "description": "KachJS - Minimalistic TypeScript framework",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "kach.js",
   "bin": {
     "kach": "./index.js"
