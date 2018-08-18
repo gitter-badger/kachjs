@@ -3,8 +3,7 @@
 function traverseNodes(el: HTMLElement, revisit?: boolean) {
   if (el.hasAttribute('kach-app') && !revisit) return;
   el.setAttribute('kach-app', '');
-  const parseInner = !el.children || el.children.length === 0;
-  new KachDirectives(el, parseInner);
+  new KachDirectives(el);
   for (let i = 0; i < el.children.length; i++) traverseNodes(el.children.item(i) as HTMLElement, revisit);
 }
 
