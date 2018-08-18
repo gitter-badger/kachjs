@@ -15,7 +15,7 @@ class KachComponent extends HTMLElement {
       getComponentTemplate(selector).then(template => {
         this.innerHTML = (template as string).replace(/{{@data}}/g, this.innerData || '');
         // We get DOM updated, so that we traverse this node again
-        traverseNodes(this);
+        traverseNodes(this, true);
       });
   }
 }
