@@ -40,7 +40,8 @@ class KachDirectives {
   }
   @Directive('(init)')
   initDirective(el: HTMLElement, data: string) {
-    new KachInitDirective(data);
+    if (data.indexOf('=') === -1) console.error(`Failed to parse (init)="${data}"`);
+    else eval('$data.' + data);
   }
   @Directive('(if)')
   ifDirective(el: HTMLElement, data: string) {
