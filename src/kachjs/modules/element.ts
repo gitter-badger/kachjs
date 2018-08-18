@@ -14,16 +14,21 @@ interface ExtendableCSSStyleDeclaration extends CSSStyleDeclaration {
 }
 class KachModifiable {
   style: Function;
+  class: Function;
   constructor(public el: HTMLElement | HTMLCollectionOf<Element> | NodeListOf<Element> | null) {
-    if (el instanceof HTMLElement)
+    if (this.el instanceof HTMLElement) {
       this.style = (stylename: string, value: string) => {
         ((this.el as HTMLElement).style as ExtendableCSSStyleDeclaration)[stylename] = value;
       };
-    else if (!el) this.style = () => {};
-    else
+      this.class = (classname: string) => (this.el as HTMLElement).classList.toggle(classname);
+    } else if (!this.el) this.style = this.class = () => {};
+    else {
       this.style = (stylename: string, value: string) =>
         (this.el as any).forEach(
           (element: HTMLElement) => ((element.style as ExtendableCSSStyleDeclaration)[stylename] = value),
         );
+      this.class = (classname: string) =>
+        (this.el as any).forEach((element: HTMLElement) => element.classList.toggle(classname));
+    }
   }
 }

@@ -159,9 +159,11 @@ $element('.active')
 $element('div')
 ```
 Returns: `KachModifiable`
-Functions:
+Fields:
 ```
 KachModifiable.style(stylename: string, value: string) // Set style of element(s)
+KachModifiable.class(classname: string) // Toggle class of element(s)
+KachModifiable.el // Element, element list or null matching selector
 ```
 ##### subscribe - listen for changes in the variable
 ```
