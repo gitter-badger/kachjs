@@ -30,7 +30,7 @@ class KachForDirective {
   }
   private render() {
     let rendered = '';
-    eval(`for (let ${this.loop}) {
+    eval(`let i = 0;for (let ${this.loop}) {
       let match;
       let parsed = this.loopDirective;
       do {
@@ -40,13 +40,14 @@ class KachForDirective {
           parsed = parsed.replace(
             directive,
             eval(
-              \`(function(${this.loopData[0]}, json) {return \${directive.slice(2, -1)}})(${
+              \`(function(${this.loopData[0]}, json, i) {return \${directive.slice(2, -1)}})(${
       this.loopData[0]
-    }, JSON.stringify)\`,
+    }, JSON.stringify, i)\`,
             ),
           );
         }
       } while (match);
+      i++;
       rendered += parsed;
     }`);
     this.el.innerHTML = rendered;
