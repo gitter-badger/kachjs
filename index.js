@@ -13,7 +13,11 @@ function system(pr, args) {
   });
 }
 
-const build_sh = `mkdir prod 2>/dev/null
+const build_sh = `if [ -d prod/ ];
+then
+    rm -rf prod || exit 1
+fi
+mkdir prod 2>/dev/null
 mkdir prod/components 2>/dev/null
 npx prettier --write "src/**/*.ts"
 npx tsc || exit 1
@@ -32,6 +36,7 @@ fi
 npx uglifyjs prod/app.js -o prod/app.js
 cp src/index.html prod/
 cp src/components/**/*.html prod/components/
+cp -r src/assets prod/
 npx sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1`;
 const prettierrc = `{
   "printWidth": 120,
@@ -194,6 +199,7 @@ async function newProject(name) {
   fs.writeFileSync(name + '/src/index.html', index_html(name));
   ncp(__dirname + '/src/kachjs', name + '/src/kachjs');
   fs.mkdirSync(name + '/src/components');
+  fs.mkdirSync(name + '/src/assets');
 
   fs.mkdirSync(name + '/prod');
   fs.mkdirSync(name + '/prod/components');

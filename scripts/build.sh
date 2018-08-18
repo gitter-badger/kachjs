@@ -1,3 +1,7 @@
+if [ -d prod/ ];
+then
+    rm -rf prod || exit 1
+fi
 mkdir prod 2>/dev/null
 mkdir prod/components 2>/dev/null
 prettier --write "src/**/*.ts"
@@ -17,4 +21,5 @@ fi
 uglifyjs prod/app.js -o prod/app.js
 cp src/index.html prod/
 cp src/components/**/*.html prod/components/
+cp -r src/assets prod/
 sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1
