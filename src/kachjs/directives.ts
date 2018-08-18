@@ -1,33 +1,13 @@
+type directiveRegisterCallback = (el: HTMLElement, data: string, ...args: string[]) => {};
+let $directives: { [key: string]: directiveRegisterCallback } = {};
+
+function Directive(attrname: string) {
+  if (!$directives) $directives = {};
+  if ($directives[attrname]) throw Error(`Directive ${attrname} was already defined!`);
+  return (target: any, key: any, value: any) => ($directives[attrname] = value.value);
+}
 class KachDirectives {
-  private readonly directives: { [key: string]: Function } = {
-    '(click)': (action: string) => {
-      this.el.addEventListener('click', () => {
-        eval(action);
-      });
-    },
-    '(init)': (action: string) => {
-      new KachInitDirective(action);
-    },
-    '(if)': (action: string) => {
-      new KachIfDirective(this.el, action);
-    },
-    '(ifn)': (action: string) => {
-      new KachIfDirective(this.el, action, true);
-    },
-    '(for)': (loop: string) => {
-      new KachForDirective(this.el, loop);
-    },
-    '(bind)': (objname: string, ...args: string[]) => {
-      new KachBindDirective(this.el, objname, args[0]);
-    },
-    '(listen)': (objname: string, ...args: string[]) => {
-      new KachListenDirective(this.el, objname, args[0]);
-    },
-    '(model)': (objname: string) => {
-      new KachModelDirective(this.el, objname);
-    },
-  };
-  constructor(private el: HTMLElement, parseInnerText: boolean) {
+  constructor(private el: HTMLElement) {
     if (this.el.hasAttributes()) {
       for (let i = 0; i < this.el.attributes.length; i++)
         this.el.attributes[i].value = this.evalAndReplace(this.el.attributes[i].value);
@@ -35,9 +15,7 @@ class KachDirectives {
         if (RegExp(`^\\(.+?(:.+)?\\)$`).test(this.el.attributes[i].name)) {
           let args = this.el.attributes[i].name.slice(1, -1).split(':');
           let directive = `(${args[0]})`;
-          if (this.directives[directive]) {
-            this.directives[directive](this.el.attributes[i].value, ...args.slice(1));
-          }
+          if ($directives[directive]) $directives[directive](this.el, this.el.attributes[i].value, ...args.slice(1));
         }
       }
     }
@@ -54,5 +32,38 @@ class KachDirectives {
       });
     }
     return data;
+  }
+
+  @Directive('(click)')
+  clickDirective(el: HTMLElement, data: string) {
+    el.addEventListener('click', () => eval(data));
+  }
+  @Directive('(init)')
+  initDirective(el: HTMLElement, data: string) {
+    new KachInitDirective(data);
+  }
+  @Directive('(if)')
+  ifDirective(el: HTMLElement, data: string) {
+    new KachIfDirective(el, data);
+  }
+  @Directive('(ifn)')
+  ifnDirective(el: HTMLElement, data: string) {
+    new KachIfDirective(el, data, true);
+  }
+  @Directive('(for)')
+  forDirective(el: HTMLElement, data: string) {
+    new KachForDirective(el, data);
+  }
+  @Directive('(bind)')
+  bindDirective(el: HTMLElement, data: string, ...args: string[]) {
+    new KachBindDirective(el, data, args[0]);
+  }
+  @Directive('(listen)')
+  listenDirective(el: HTMLElement, data: string, ...args: string[]) {
+    new KachListenDirective(el, data, args[0]);
+  }
+  @Directive('(model)')
+  modelDirective(el: HTMLElement, data: string) {
+    new KachModelDirective(el, data);
   }
 }
