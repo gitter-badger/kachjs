@@ -1,8 +1,6 @@
 /// <reference path="modules/component.cache.ts"/>
 function Component(selector: string) {
-  return (target: any) => {
-    window.customElements.define(selector, target);
-  };
+  return (target: any) => window.customElements.define(selector, target);
 }
 
 class KachComponent extends HTMLElement {
