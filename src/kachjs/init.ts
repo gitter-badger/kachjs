@@ -1,11 +1,11 @@
 /// <reference path="component.ts"/>
 /// <reference path="directives.ts"/>
-function traverseNodes(el: HTMLElement) {
-  if (el.hasAttribute('kach-app')) return;
+function traverseNodes(el: HTMLElement, revisit?: boolean) {
+  if (el.hasAttribute('kach-app') && !revisit) return;
   el.setAttribute('kach-app', '');
   const parseInner = !el.children || el.children.length === 0;
   new KachDirectives(el, parseInner);
-  for (let i = 0; i < el.children.length; i++) traverseNodes(el.children.item(i) as HTMLElement);
+  for (let i = 0; i < el.children.length; i++) traverseNodes(el.children.item(i) as HTMLElement, revisit);
 }
 
 var $data: { [key: string]: any } = {};
