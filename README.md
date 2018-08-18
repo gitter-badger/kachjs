@@ -148,6 +148,21 @@ interface HTTPRequest {
 function $http<T>(requestData: HTTPRequest): Promise<T>
 ```
 $http sends HTTP request and returns promise with response body. If parseJSON is set, response body is parsed and returned in Promise, otherwise string casted to T is returned.
+##### $element - query elements using selector
+```
+function $element(selector: string)
+```
+Example calls:
+```
+$element('#header')
+$element('.active')
+$element('div')
+```
+Returns: `KachModifiable`
+Functions:
+```
+KachModifiable.style(stylename: string, value: string) // Set style of element(s)
+```
 ##### subscribe - listen for changes in the variable
 ```
 function subscribe(objname: string, callback: Function)
