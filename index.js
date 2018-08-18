@@ -81,12 +81,12 @@ build = () => {
   return new Promise(resolve => {
     if (!lock) {
       lock = true;
-      let builder = spawn('kach', ['build']);
+      let builder = spawn('/usr/bin/env', ['bash', 'scripts/build.sh']);
       builder.stdout.pipe(process.stdout);
       builder.stderr.pipe(process.stderr);
-      builder.on('close', () => {
+      builder.on('close', (code) => {
         lock = false;
-        $subscribes.forEach(subscribe => subscribe());
+        if (code === 0) $subscribes.forEach(subscribe => subscribe());
         resolve();
       });
     }
