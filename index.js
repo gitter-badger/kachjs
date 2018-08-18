@@ -44,7 +44,16 @@ const prettierrc = `{
   "singleQuote": true
 }`;
 const gitignore = `prod/
-node_modules/`;
+node_modules/
+src/assets
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db`;
 function index_html(project) {
   return `<html>
     <head>
