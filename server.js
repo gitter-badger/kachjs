@@ -12,7 +12,7 @@ const spawn = require('child_process').spawn,
     return new Promise(resolve => {
       if (!lock) {
         lock = true;
-        let builder = spawn('/usr/bin/env', ['bash', 'scripts/build.sh']);
+        let builder = spawn('/usr/bin/env', ['bash', 'scripts/build.sh', 'dev']);
         builder.stdout.pipe(process.stdout);
         builder.stderr.pipe(process.stderr);
         builder.on('close', code => {
