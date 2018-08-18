@@ -14,6 +14,7 @@ es.onmessage = () => {
 $(cat prod/app.js)
 EOF
 fi
+uglifyjs prod/app.js -o prod/app.js
 cp src/index.html prod/
 cp src/components/**/*.html prod/components/
 sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1

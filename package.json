@@ -3,6 +3,10 @@
   "name": "kachjs",
   "description": "KachJS - Minimalistic TypeScript framework",
   "version": "0.2.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zolbooo/kachjs"
+  },
   "main": "kach.js",
   "bin": {
     "kach": "./index.js"
@@ -28,5 +32,10 @@
     "build-dev": "/usr/bin/env bash scripts/build.sh dev",
     "start": "node server.js"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^1.14.2",
+    "sass": "^1.13.0",
+    "typescript": "^3.0.1",
+    "uglify-es": "^3.3.9"
+  }
 }

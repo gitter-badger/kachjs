@@ -15,8 +15,8 @@ function system(pr, args) {
 
 const build_sh = `mkdir prod 2>/dev/null
 mkdir prod/components 2>/dev/null
-prettier --write "src/**/*.ts"
-tsc || exit 1
+npx prettier --write "src/**/*.ts"
+npx tsc || exit 1
 if [ "$1" == "dev" ]
 then
     cat << EOF > prod/app.js
@@ -29,9 +29,10 @@ es.onmessage = () => {
 $(cat prod/app.js)
 EOF
 fi
+npx uglifyjs prod/app.js -o prod/app.js
 cp src/index.html prod/
 cp src/components/**/*.html prod/components/
-sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1`;
+npx sass src/components/app-root/app-root.sass prod/styles.css --no-source-map || exit 1`;
 const prettierrc = `{
   "printWidth": 120,
   "trailingComma": "all",
@@ -143,7 +144,12 @@ function package_json(name) {
     "build-dev": "/usr/bin/env bash scripts/build.sh dev",
     "start": "node server.js"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "prettier": "^1.14.2",
+    "sass": "^1.13.0",
+    "typescript": "^3.0.1",
+    "uglify-es": "^3.3.9"
+  }
 }`;
 }
 const tsconfig_json = `{

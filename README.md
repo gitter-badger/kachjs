@@ -1,17 +1,4 @@
 # KachJS - minimalistic TypeScript framework
-## Dependencies
-* sass
-```
-npm i -g sass
-```
-* TypeScript
-```
-npm i -g typescript
-```
-* Prettier
-```
-npm i -g prettier
-```
 ## Quick start
 Install this package:
 ```
