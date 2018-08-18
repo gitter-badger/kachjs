@@ -41,7 +41,11 @@ class KachDirectives {
   @Directive('(init)')
   initDirective(el: HTMLElement, data: string) {
     if (data.indexOf('=') === -1) console.error(`Failed to parse (init)="${data}"`);
-    else eval('$data.' + data);
+    else {
+      let varname = data.slice(data.indexOf('='));
+      if (varname.indexOf(' ') !== -1) varname = varname.slice(varname.indexOf(' '));
+      if (!$data[varname]) eval('$data.' + data);
+    }
   }
   @Directive('(if)')
   ifDirective(el: HTMLElement, data: string) {
