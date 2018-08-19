@@ -1,8 +1,8 @@
-function listen(object: Object, objname: string, callback: Function) {
+function listen(object: any, objname: string, callback: Function) {
   let prop = Object.getOwnPropertyDescriptor(object, objname);
   if (!prop || !prop.set) {
-    let val: any;
-    Object.defineProperty($data, objname, {
+    let val: any = object[objname];
+    Object.defineProperty(object, objname, {
       get() {
         return val;
       },
