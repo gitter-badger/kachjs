@@ -1,18 +1,21 @@
-function bind(objname: string) {
-  let prop = Object.getOwnPropertyDescriptor($data, objname);
+function listen(object: Object, objname: string, callback: Function) {
+  let prop = Object.getOwnPropertyDescriptor(object, objname);
   if (!prop || !prop.set) {
-    let val: any = $data[objname];
+    let val: any;
     Object.defineProperty($data, objname, {
       get() {
         return val;
       },
       set(newValue: any) {
         val = newValue;
-        $subscribes[objname].forEach((subscriber: Function) => subscriber());
+        callback();
       },
     });
   }
+}
+function bind(objname: string) {
   if (!$subscribes[objname]) $subscribes[objname] = [];
+  listen($data, objname, () => $subscribes[objname].forEach((subscriber: Function) => subscriber()));
 }
 
 class KachBindDirective {
