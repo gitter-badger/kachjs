@@ -1,4 +1,5 @@
 # KachJS - minimalistic TypeScript framework
+[![npm version](https://badge.fury.io/js/kachjs.svg)](https://www.npmjs.com/package/kachjs)
 ## Quick start
 Install this package:
 ```
