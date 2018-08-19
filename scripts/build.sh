@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 if [ -d prod/ ];
 then
     rm -rf prod || exit 1
