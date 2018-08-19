@@ -7,6 +7,8 @@ const http = require('http');
 const path = require('path');
 
 let lock = false;
+let $subscribes = [];
+
 const spawn = require('child_process').spawn,
   build = () => {
     return new Promise(resolve => {
@@ -25,7 +27,6 @@ const spawn = require('child_process').spawn,
     });
   };
 
-let $subscribes = [];
 let server = http
   .createServer(function(req, res) {
     res.setHeader('Cache-Control', 'no-cache');
