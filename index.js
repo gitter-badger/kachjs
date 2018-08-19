@@ -176,12 +176,22 @@ const tsconfig_json = `{
     "strict": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "prod"
   ]
 }`;
+
+function parseName(name) {
+  name = name.charAt(0).toUpperCase() + name.slice(1);
+  let index;
+  while ((index = name.indexOf('-')) !== -1) {
+    if (index + 1 === name.length) name = name.slice(0, -1);
+    else name = name.slice(0, index) + name.charAt(index + 1).toUpperCase() + name.slice(index + 2);
+  }
+  return name;
+}
 function component_ts(name) {
   return `/// <reference path="../../kachjs/component.ts"/>
 @Component('${name}')
@@ -191,6 +201,21 @@ class ${parseName(name)}Component extends KachComponent {
   }
 }
 `;
+}
+function newComponent(name) {
+  if (!/^[a-z]+-[a-z]+$/.test(name)) {
+    console.error('Component name should only contain lowercase letters and at least one dash(-)');
+    return;
+  }
+  fs.mkdirSync(`src/components/${name}`);
+  fs.writeFileSync(`src/components/${name}/${name}.html`, `<p>${name} works!</p>`);
+  fs.writeFileSync(
+    `src/components/${name}/${name}.sass`,
+    `${name}
+\t`,
+  );
+  if (name != 'app-root') prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
+  fs.writeFileSync(`src/components/${name}/component.ts`, component_ts(name));
 }
 
 async function newProject(name) {
@@ -221,31 +246,6 @@ async function newProject(name) {
   await system('git', ['init']);
   await system('git', ['add', '--all']);
   await system('git', ['commit', '-m', 'Initial commit']);
-}
-
-function parseName(name) {
-  name = name.charAt(0).toUpperCase() + name.slice(1);
-  let index;
-  while ((index = name.indexOf('-')) !== -1) {
-    if (index + 1 === name.length) name = name.slice(0, -1);
-    else name = name.slice(0, index) + name.charAt(index + 1).toUpperCase() + name.slice(index + 2);
-  }
-  return name;
-}
-function newComponent(name) {
-  if (!/^[a-z]+-[a-z]+$/.test(name)) {
-    console.error('Component name should only contain lowercase letters and at least one dash(-)');
-    return;
-  }
-  fs.mkdirSync(`src/components/${name}`);
-  fs.writeFileSync(`src/components/${name}/${name}.html`, `<p>${name} works!</p>`);
-  fs.writeFileSync(
-    `src/components/${name}/${name}.sass`,
-    `${name}
-\t`,
-  );
-  if (name != 'app-root') prependFile('src/components/app-root/app-root.sass', `@import '../${name}/${name}.sass'\n`);
-  fs.writeFileSync(`src/components/${name}/component.ts`, component_ts(name));
 }
 
 function usage() {
