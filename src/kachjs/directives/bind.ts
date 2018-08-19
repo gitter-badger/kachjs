@@ -34,10 +34,10 @@ class KachBindDirective {
             input.addEventListener('keydown', () => ($data[objname] = input.value || ''));
             break;
         }
-        input.value = $data[objname];
+        if ($data[objname] !== undefined) input.value = $data[objname];
         subscribe(objname, () => (input.value = $data[objname]));
       } else {
-        this.el.innerText = $data[objname];
+        if ($data[objname] !== undefined) this.el.innerText = $data[objname];
         subscribe(objname, () => (this.el.innerText = $data[objname]));
       }
     }
