@@ -1,5 +1,5 @@
 # KachJS - minimalistic TypeScript framework
-[![npm version](https://badge.fury.io/js/kachjs.svg)](https://www.npmjs.com/package/kachjs)
+[![npm version](https://badge.fury.io/js/kachjs.svg)](https://www.npmjs.com/package/kachjs) [![Join the chat at https://gitter.im/kachjs/Lobby](https://badges.gitter.im/kachjs/Lobby.svg)](https://gitter.im/kachjs/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ## Quick start
 Install this package:
 ```
