@@ -21,3 +21,15 @@ class KachDataComponent extends KachComponent {
     super('kach-data', true);
   }
 }
+@Component('kach-router')
+class KachRoutes extends KachComponent {
+  constructor() {
+    super('kach-router', true);
+    window.addEventListener('hashchange', () => {
+      if ($routes[location.hash.slice(1)]) {
+        let routerComponent = $routes[location.hash.slice(1)];
+        this.innerHTML = `<${routerComponent}></${routerComponent}>`;
+      } else this.innerHTML = '';
+    });
+  }
+}

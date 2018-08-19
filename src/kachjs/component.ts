@@ -1,5 +1,7 @@
 /// <reference path="modules/component.cache.ts"/>
-function Component(selector: string) {
+/// <reference path="modules/router.ts"/>
+function Component(selector: string, route?: string) {
+  if (route) $routes[route] = selector;
   return (target: any) => window.customElements.define(selector, target);
 }
 
