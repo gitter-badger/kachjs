@@ -14,9 +14,10 @@ function Route(options: RouteDecoratorOptions) {
 class KachRoutes extends KachComponent {
   constructor() {
     super('kach-router', true);
-    listen($routes, 'default', () => {
-      if ($routes[location.hash.slice(1)]) this.innerHTML = $routes['default'];
-    });
+    if (!$routes['default'])
+      listen($routes, 'default', () => {
+        if ($routes[location.hash.slice(1)]) this.innerHTML = $routes['default'];
+      });
     if ($routes[location.hash.slice(1)]) {
       let routerComponent = $routes[location.hash.slice(1)];
       this.innerHTML = `<${routerComponent}></${routerComponent}>`;
