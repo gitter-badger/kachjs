@@ -176,7 +176,7 @@ const tsconfig_json = `{
     "strict": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
-    "experimentalDecorators": true,
+    "experimentalDecorators": true
   },
   "exclude": [
     "prod"
