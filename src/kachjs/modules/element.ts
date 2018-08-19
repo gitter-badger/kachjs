@@ -13,8 +13,9 @@ interface ExtendableCSSStyleDeclaration extends CSSStyleDeclaration {
   [key: string]: any;
 }
 class KachModifiable {
-  style: Function;
-  class: Function;
+  style: (stylename: string, value: string) => void;
+  class: (classname: string) => void;
+
   constructor(public el: HTMLElement | HTMLCollectionOf<Element> | NodeListOf<Element> | null) {
     if (this.el instanceof HTMLElement) {
       this.style = (stylename: string, value: string) => {
